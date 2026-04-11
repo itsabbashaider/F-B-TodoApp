@@ -1,0 +1,211 @@
+/* ===========================
+   CSS VARIABLES
+   =========================== */
+:root {
+  --primary-color: linear-gradient(135deg, hsl(262, 100%, 72%), hsl(0, 19%, 65%));
+  --text-color: rgb(58, 58, 58);
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-input: rgba(255, 255, 255, 0.1);
+  --glass-item: rgba(255, 255, 255, 0.08);
+  --radius: 10px;
+  --radius-lg: 20px;
+  --transition: 0.3s;
+}
+
+/* ===========================
+   GLOBAL STYLES  
+   =========================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: hsl(0, 0%, 74%);
+}
+
+/* ===========================
+   MAIN CONTAINER
+   =========================== */
+.todo-app {
+  width: 800px;
+  height: 700px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(15px);
+  padding: 45px;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: var(--text-color);
+}
+
+/* ===========================
+   FORM STYLES
+   =========================== */
+form input,
+form textarea {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  outline: none;
+  border-radius: var(--radius);
+  margin-bottom: 15px;
+  background: var(--glass-input);
+  color: var(--text-color);
+  font-family: inherit;
+}
+
+form input::placeholder,
+form textarea::placeholder {
+  color: rgba(58, 58, 58, 0.7);
+}
+
+form textarea {
+  resize: none;
+  height: 180px;
+}
+
+form button {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: var(--radius);
+  font-weight: bold;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+form button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.form-actions button {
+  flex: 1;
+}
+
+/* ===========================
+   TODO LIST STYLES
+   =========================== */
+.todo-list {
+  margin-top: 20px;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
+.todo-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.todo-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.todo-list::-webkit-scrollbar-thumb {
+  background: rgba(58, 58, 58, 0.3);
+  border-radius: 3px;
+}
+
+.todo-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(58, 58, 58, 0.5);
+}
+
+.todo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--glass-item);
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+  transition: var(--transition);
+}
+
+.todo-item:hover {
+  transform: scale(1.02);
+}
+
+.text h3 {
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+.text p {
+  font-size: 0.875rem;
+  color: rgba(58, 58, 58, 0.9);
+  margin-top: 4px;
+}
+
+.actions button {
+  background: transparent;
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 4px 8px;
+  transition: var(--transition);
+}
+
+.actions button:hover {
+  opacity: 0.7;
+}
+
+.todo-item.completed {
+  opacity: 0.5;
+}
+
+.todo-item.completed .text h3,
+.todo-item.completed .text p {
+  text-decoration: line-through;
+}
+
+/* ===========================
+   PREVIEW STYLES
+   =========================== */
+.preview {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(40, 16, 16, 0.1);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--primary-color);
+}
+
+.preview h4 {
+  font-size: 0.75rem;
+  color: rgba(58, 58, 58, 0.7);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.preview-content h3 {
+  color: var(--text-color);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.preview-content p {
+  font-size: 0.8rem;
+  color: rgba(58, 58, 58, 0.8);
+  margin-top: 4px;
+}
+
