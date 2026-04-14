@@ -1,49 +1,82 @@
-/* ===========================
-   IMPORTS
-   =========================== */
 import React, { useState } from "react";
+import Modal from "./Modal";
+import Buttons from "./Buttons";
+import ConfirmModal from "./ConfirmModal";
 
-/* ===========================
-   MAIN COMPONENT
-   =========================== */
 function ToDoApp() {
-  /* ===========================
-     STATE MANAGEMENT
-     =========================== */
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [editId, setEditId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [mode, setMode] = useState("create")
 
-  /* ===========================
-     EVENT HANDLERS
-     =========================== */
+  /* =======================
+        HANDLER
+  ======================= */
+
   const submmitHandler = (e) => {
     e.preventDefault();
+
+    if (mode === "view") return;
+
     if (!title || !description) {
       alert("Please fill in both fields");
       return;
     }
-    if (editId) {
-      setTasks(tasks.map((task) =>
-        task.id === editId ? { ...task, title, description } : task
-      ));
-      setEditId(null);
-    } else {
-      setTasks([...tasks, { 
-        id: Date.now(),
-        title, 
-        description 
-      }]);
+
+    if (mode === "edit") {
+      setTasks(
+        tasks.map((task) =>
+          task.id === editId
+            ? { ...task, title, description }
+            : task
+        )
+      );
     }
+
+    if (mode === "create") {
+      setTasks([
+        ...tasks,
+        {
+          id: Date.now(),
+          title,
+          description,
+          completed: false,
+        },
+      ]);
+    }
+
+    // reset + close
+    setIsModalOpen(false);
     setTitle("");
     setDescription("");
+    setEditId(null);
+  };
+
+  /* =======================
+        ACTIONS
+  ======================= */
+    const [confirm, setConfirm] = React.useState({
+      open: false,
+      type: null,
+      taskid: null,
+    });
+
+  const truncate = (text, limit = 40) => {
+    return text.length > limit
+      ? text.slice(0, limit) + "..."
+      : text;
   };
 
   const toggleComplete = (id) => {
-    setTasks(tasks.map((task) =>
-      task.id === id ? { ...task, completed: !task.completed } : task
-    ));
+    setTasks(
+      tasks.map((task) =>
+        task.id === id
+          ? { ...task, completed: !task.completed }
+          : task
+      )
+    );
   };
 
   const deleteTask = (id) => {
@@ -52,84 +85,129 @@ function ToDoApp() {
 
   const editTask = (id) => {
     const task = tasks.find((t) => t.id === id);
+
+    setMode("edit")
     setTitle(task.title);
     setDescription(task.description);
     setEditId(id);
+    setIsModalOpen(true)
   };
 
-  /* ===========================
-     RENDER
-     =========================== */
+  const openCreate = () => {
+    setMode("create")
+    setTitle("");
+    setDescription("");
+    setEditId(null);
+    setIsModalOpen(true)
+  };
+
+  const openDetail = (id) => {
+    const task = tasks.find((t) => t.id === id);
+
+    setMode("view")
+    setTitle(task.title)
+    setDescription(task.description)
+    setEditId(null)
+    setIsModalOpen(true)
+  };
+
+  /* =======================
+        UI
+  ======================= */
+
   return (
     <div className="todo-app">
       <h1>To-Do App</h1>
 
-      {/* Form Section */}
-      <form onSubmit={submmitHandler}>
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-
-        <div className="form-actions">
-          <button type="submit">
-            {editId ? "Update" : "Add Task"}
+      {/* LIST */}
+      {(
+        <>
+          <button className="plus-button" onClick={openCreate}>
+            +
           </button>
-          <button type="button" onClick={() => {
-            setTitle("");
-            setDescription("");
-            setEditId(null);
-          }}>
-            Clear
-          </button>
-        </div>
 
-        {/* Preview Section */}
-        {(title || description) && (
-          <div className="preview">
-            <h4>Preview:</h4>
-            <div className="preview-content">
-              {title && <h3>{title}</h3>}
-              {description && <p>{description}</p>}
-            </div>
+          <div className="todo-list">
+            {tasks.map((task) => (
+              <div
+                key={task.id}
+                className={`todo-item ${
+                  task.completed ? "completed" : ""
+                }`}
+                onClick={() => openDetail(task.id)}
+              >
+                <div
+                  className="text" 
+                >
+                  <h3>{task.title}</h3>
+                  <p>{truncate(task.description, 40)}</p>
+                </div>
+
+                <div className="actions">
+                  <button className="Neutral"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleComplete(task.id);
+                    }}
+                  >
+                    ✓
+                  </button>
+
+                  <button className="Primary"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      editTask(task.id);
+                    }}
+                  >
+                    ✎
+                  </button>
+
+                  <button className="Destructive"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                        setConfirm({
+                        open: true,
+                        type: "delete",
+                        taskId: task.id,
+                      });
+                    }}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
-        )}
-      </form>
+        </>
+      )}
+      <Modal
+        isOpen={isModalOpen}
+        mode={mode}
+        title={title}
+        description={description}
+        setTitle={setTitle}
+        setDescription={setDescription}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={submmitHandler}
+      />
+              {/* CONFIRMATION MODAL */}
+      <ConfirmModal 
+        isOpen={confirm.open}
+        message={
+          confirm.type === "delete"
+            ? "Are you sure you want to delete?"
+            : "Are you sure you want to cancel?"
+        }
+        onConfirm={() => {
+          if (confirm.type === "delete") {
+            deleteTask(confirm.taskId); 
+          }
 
-      {/* Todo List Section */}
-      <div className="todo-list">
-        {tasks.map((task) => (
-          <div
-            key={task.id}
-            className={`todo-item ${task.completed ? "completed" : ""}`}
-          >
-            <div className="text">
-              <h3>{task.title}</h3>
-              <p>{task.description}</p>
-            </div>
-
-            <div className="actions">
-              <button onClick={() => toggleComplete(task.id)}>
-                ✓
-              </button>
-              <button onClick={() => editTask(task.id)}>
-                ✎
-              </button>
-              <button onClick={() => deleteTask(task.id)}>
-                ✕
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          setConfirm({ open: false, type: null, taskId: null });
+        }}
+        onCancel={() =>
+          setConfirm({ open: false, type: null, taskId: null })
+        }
+      />
     </div>
   );
 }
