@@ -19,7 +19,7 @@ function Modal({
 
   if (!isOpen) return null;
 
-  // 🔥 shared change checker
+  
   const checkChanges = () => {
     let hasChanges = false;
 

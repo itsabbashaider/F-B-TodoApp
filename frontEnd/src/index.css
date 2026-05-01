@@ -2,7 +2,7 @@
    CSS VARIABLES AND ROOT
    =========================== */
 :root {
-  --primary-color: linear-gradient(135deg, hsla(277, 100%, 57%, 0.455), hsl(309, 66%, 70%));
+  --primary-color: linear-gradient(360deg, hsl(0, 0%, 70%), hsl(0, 0%, 55%));
   --text-color: rgb(58, 58, 58);
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-input: rgba(255, 255, 255, 0.1);
@@ -224,9 +224,28 @@ form textarea {
 
 
 /* ===========================
-   BUTTONS
-   =========================== */
+BUTTONS
+=========================== */
 
+/* Plus Button */
+.plus-button {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 60px;
+  height: 60px;
+  background: var(--primary-color);
+  color: var(--text-color);
+  border: none;
+  border-radius: 50%;
+  font-size: 30px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: var(--transition);
+}
 /* Form Buttons */
 form button {
   width: 300px;
@@ -239,7 +258,8 @@ form button {
   cursor: pointer;
   transition: var(--transition);
   font-weight: bolder;
-  font-size: 16px;
+  font-style: italic;
+  font-size: 18px;
 }
 
 form button:hover {
@@ -262,25 +282,6 @@ form button:hover {
   opacity: 0.7;
 }
 
-/* Plus Button */
-.plus-button {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  width: 60px;
-  height: 60px;
-  background: var(--primary-color);
-  color: var(--text-color);
-  border: none;
-  border-radius: 50%;
-  font-size: 30px;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  transition: var(--transition);
-}
 
 .confirm-actions button {
   background-color: rgb(198, 198, 198);
@@ -313,6 +314,18 @@ button.Primary {
 button.Destructive {
   color: red;
 }
+
+button.Yes {
+  background-color: rgba(255, 0, 0, 0.4);
+  color: hsl(264, 55%, 19%);
+  width: 60px;
+}
+
+button.No {
+  background-color: rgba(28, 255, 100, 0.4);
+  color: hsl(264, 55%, 19%);
+  width: 60px;
+}
 /* ===========================
         CONFIRM MODAL
    =========================== */
@@ -333,19 +346,23 @@ button.Destructive {
   background: rgb(255, 255, 255);
   padding: 20px;
   border-radius: 12px;
-  width: 300px;
+  width: 350px;
+  height: 120px;
 }
 
 .confirm-actions {
   display: flex;
-  justify-content:space-around ;
+  justify-content:space-evenly ;
   margin-top: 15px;
   
 }
 
 .confirm-modal p {
-  padding-left: 20px ;
+  text-align: center;
   padding-bottom: 10px;
+  font-weight:bolder ;
+  font-style: inherit;
+  font-size: 18px;
 }
 
 
